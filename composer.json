@@ -1,0 +1,20 @@
+{
+    "name": "dragan/discord-webhooks",
+    "description": "Package for creating and sending messages via Discord webhooks",
+    "autoload": {
+        "psr-4": {
+            "Dragan\\DiscordWebhooks\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dragan",
+            "email": "61498435+VaclavKlima@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+
+    }
+}
