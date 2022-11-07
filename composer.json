@@ -1,6 +1,8 @@
 {
     "name": "dragan/discord-webhooks",
     "description": "Package for creating and sending messages via Discord webhooks",
+    "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Dragan\\DiscordWebhooks\\": "src/"
@@ -13,8 +15,5 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
-    "extra": {
-
-    }
+    "require": {}
 }
