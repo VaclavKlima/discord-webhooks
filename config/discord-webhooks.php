@@ -21,7 +21,7 @@ return [
     |
     */
     "channels" => [
-        'example_channel' => "",
+        'example_channel' => env('DISCORD_EXAMPLE_CHANNEL', ''),
         'second_example_channel' => "",
     ],
 ];
