@@ -18,6 +18,7 @@ class Webhook
     {
         $this->webhook = config('discord-webhooks.default_channel');
         $this->data = collect();
+        $this->data->put('embeds', []);
     }
 
     public function channel(string $channel): static
@@ -82,7 +83,16 @@ class Webhook
     }
 
     // Todo: attachments
-    // Todo: embeds
+
+    /** Todo: add max embeds count */
+    public function addEmbed(Embed $embed): static
+    {
+        $embeds = $this->data->get('embeds');
+        $embeds[] = $embed->getData();
+        $this->data->put('embeds', $embeds);
+
+        return $this;
+    }
 
     public function raw(array|Collection $data): static
     {
