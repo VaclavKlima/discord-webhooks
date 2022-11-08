@@ -84,10 +84,10 @@ class Webhook
 
     // Todo: attachments
 
+    /** Todo: add max embeds count */
     public function addEmbed(Embed $embed): static
     {
         $embeds = $this->data->get('embeds');
-        // Todo: max 10 embeds
         $embeds[] = $embed->getData();
         $this->data->put('embeds', $embeds);
 
