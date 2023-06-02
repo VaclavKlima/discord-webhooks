@@ -4,6 +4,7 @@ namespace Dragan\DiscordWebhooks\Services;
 
 use Dragan\DiscordWebhooks\Exceptions\DiscordWebhookResponseException;
 use Dragan\DiscordWebhooks\Exceptions\DiscordWebhookValidationException;
+use http\Client\Request;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -19,6 +20,8 @@ class Webhook
         $this->webhook = config('discord-webhooks.default_channel');
         $this->data = collect();
         $this->data->put('embeds', []);
+        $this->data->put('files', []);
+        $this->data->put('attachments', []);
     }
 
     public function channel(string $channel): static
@@ -94,6 +97,29 @@ class Webhook
         return $this;
     }
 
+    public function addAttachment(string $filePath, ?string $description = null): static
+    {
+        $files = $this->data->get('files');
+        $attachments = $this->data->get('attachments');
+        $id = count($files);
+        $filename = array_slice(explode('\\', $filePath), -1)[0];
+        $attachments[] = [
+            'id' => $id,
+            'description' => $description ?? $filename,
+            'filename' => $filename,
+        ];
+        $files[$id] = [
+            'file' => file_get_contents($filePath),
+            'filename' => $filename,
+        ];
+
+        $this->data->put('attachments', $attachments);
+        $this->data->put('files', $files);
+
+        return $this;
+    }
+
+
     public function raw(array|Collection $data): static
     {
         $this->data = $data instanceof Collection ? $data : collect($data);
@@ -107,7 +133,17 @@ class Webhook
      */
     public function send(): Response
     {
-        $response = Http::post($this->webhook, $this->parseData());
+        $request = Http::beforeSending(function ($request) {
+
+        });
+
+//        foreach ($this->data->get('files') as $key => $file) {
+//            $request->attach("files[{$key}]",$file['file'], $file['filename']);
+//        }
+//
+//        $this->data->put('files', []);
+
+        $response = $request->send('post',$this->webhook, $this->parseData());
 
         if (!$response->successful()) {
             throw new DiscordWebhookResponseException("Discord responded with status: {$response->status()}, Reason: {$response->reason()}", $response->status());
